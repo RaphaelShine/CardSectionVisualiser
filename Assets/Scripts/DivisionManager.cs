@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
 
 public class DivisionManager : MonoBehaviour
 {
@@ -18,14 +19,49 @@ public class DivisionManager : MonoBehaviour
     public bool IsDivided { get; private set; }
     public event Action OnDivided;
 
-    private IEnumerator Start()
+    // 곡을 고른 뒤 GameManager가 부른다. usedScenes는 프롬프트에 나온 장면들로, 이미지가 없으면 경고한다
+    public void Divide(string cardFolder, ICollection<int> usedScenes)
     {
-        loadHandle = Addressables.LoadAssetsAsync<Sprite>(cardLabel, null);
+        if (IsDivided || loadHandle.IsValid()) return;
+        StartCoroutine(LoadAndDivide(cardFolder, usedScenes));
+    }
+
+    private IEnumerator LoadAndDivide(string cardFolder, ICollection<int> usedScenes)
+    {
+        // 모든 곡의 카드에 같은 label이 붙어 있고 곡마다 같은 이름(주님말씀)도 있으므로
+        // 주소(Assets/Masses/Cards/곡/장면.png)로 고른 곡의 폴더에 있는 카드만 고른다
+        AsyncOperationHandle<IList<IResourceLocation>> locationHandle = Addressables.LoadResourceLocationsAsync(cardLabel, typeof(Sprite));
+        yield return locationHandle;
+
+        if (locationHandle.Status != AsyncOperationStatus.Succeeded)
+        {
+            Debug.LogError($"[DivisionManager] Failed to find sprites with label '{cardLabel.labelString}': {locationHandle.OperationException}");
+            Addressables.Release(locationHandle);
+            yield break;
+        }
+
+        string folder = $"/{cardFolder}/";
+        List<IResourceLocation> locations = new List<IResourceLocation>();
+        foreach (IResourceLocation location in locationHandle.Result)
+        {
+            if (location.PrimaryKey.Contains(folder) || location.InternalId.Contains(folder))
+                locations.Add(location);
+        }
+
+        if (locations.Count == 0)
+        {
+            Debug.LogError($"[DivisionManager] No sprite with label '{cardLabel.labelString}' in Masses/Cards/{cardFolder}/.");
+            Addressables.Release(locationHandle);
+            yield break;
+        }
+
+        loadHandle = Addressables.LoadAssetsAsync<Sprite>(locations, null);
         yield return loadHandle;
+        Addressables.Release(locationHandle);
 
         if (loadHandle.Status != AsyncOperationStatus.Succeeded)
         {
-            Debug.LogError($"[DivisionManager] Failed to load sprites with label '{cardLabel.labelString}': {loadHandle.OperationException}");
+            Debug.LogError($"[DivisionManager] Failed to load sprites in Masses/Cards/{cardFolder}/: {loadHandle.OperationException}");
             yield break;
         }
 
@@ -43,10 +79,10 @@ public class DivisionManager : MonoBehaviour
             cardSprites.SetScene(cardName, Divide(source));
         }
 
-        for (int i = 0; i < CardSprites.SceneCount; i++)
+        foreach (int scene in usedScenes)
         {
-            if (!cardSprites.HasScene(i))
-                Debug.LogWarning($"[DivisionManager] No image for CardName.{(CardName)i}.");
+            if (!cardSprites.HasScene(scene))
+                Debug.LogWarning($"[DivisionManager] No image for CardName.{(CardName)scene} in Masses/Cards/{cardFolder}/.");
         }
 
         IsDivided = true;

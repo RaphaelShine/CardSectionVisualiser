@@ -9,7 +9,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CommandManager commandManager;
     [SerializeField] private InputManager inputManager;
     [SerializeField] private UIManager uiManager;
+    // 시작 화면에서 고를 수 있는 곡들
+    [SerializeField] private Song[] songs;
 
+    // 고른 곡. 고르기 전에는 null
+    public Song CurrentSong { get; private set; }
     // 현재 박. Metronome이 박마다 갱신한다
     public int CurrentBeat { get; private set; } = -1;
 
@@ -17,10 +21,28 @@ public class GameManager : MonoBehaviour
     {
         metronome.OnBeat += OnBeat;
         inputManager.OnLyricSelected += MoveToBeat;
+        inputManager.OnSongSelected += SelectSong;
+
+        // 곡을 고르면 SelectSong이 그 곡의 프롬프트와 카드를 읽는다
+        uiManager.ShowSongSelection(songs);
+    }
+
+    private void SelectSong(int index)
+    {
+        if (CurrentSong != null || index < 0 || index >= songs.Length) return;
+
+        CurrentSong = songs[index];
+        inputManager.OnSongSelected -= SelectSong;
+        uiManager.HideSongSelection();
+
+        promptManager.Load(CurrentSong.prompt);
+        uiManager.ShowLyrics();
+        metronome.SetSong(CurrentSong);
 
         // 카드 조각과 Child가 모두 준비된 뒤에 노래를 시작한다
         divisionManager.OnDivided += TryPlay;
         summonManager.OnSummoned += TryPlay;
+        divisionManager.Divide(CurrentSong.name, promptManager.GetUsedCardNums());
         TryPlay();
     }
 
@@ -42,7 +64,10 @@ public class GameManager : MonoBehaviour
         if (metronome != null)
             metronome.OnBeat -= OnBeat;
         if (inputManager != null)
+        {
             inputManager.OnLyricSelected -= MoveToBeat;
+            inputManager.OnSongSelected -= SelectSong;
+        }
     }
 
     private void OnBeat(int beat)

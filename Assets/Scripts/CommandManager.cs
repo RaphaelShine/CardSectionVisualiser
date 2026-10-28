@@ -21,7 +21,13 @@ public class CommandManager : MonoBehaviour
     }
 
     // 박 단위로 기다리는 중인 Command(점멸, 쫘르륵)를 모두 멈춘다
-    public void StopCommands() => StopAllCoroutines();
+    // 치던 박수나 꺾기 같은 상체 동작도 멈춘다
+    public void StopCommands()
+    {
+        StopAllCoroutines();
+        foreach (ChildBehavior child in summonManager.Children)
+            child.StopUpperBody();
+    }
 
     // Command.row: 0 all, 1 up, 2 midd, 3 down
     // Command.col: 0 all, n 오른쪽에서 n번째 열

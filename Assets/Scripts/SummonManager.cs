@@ -20,7 +20,7 @@ public class SummonManager : MonoBehaviour
     // CardChild는 +z를 향하므로 관객 기준 오른쪽은 -x, 앞줄은 +z다. 카드 너비가 0.4라 column은 거의 맞닿는다
     // 줄의 높이는 rowStep이 아니라 StackRows가 자세에 맞춰 정한다
     [SerializeField] private Vector3 audienceRightStep = new Vector3(-0.42f, 0f, 0f);
-    [SerializeField] private Vector3 rowStep = new Vector3(0f, 0f, 0.4f);
+    [SerializeField] private Vector3 rowStep = new Vector3(0f, 0f, 0.2f);
     // 위아래 줄 카드 사이의 틈
     [SerializeField] private float rowCardGap = 0.02f;
 

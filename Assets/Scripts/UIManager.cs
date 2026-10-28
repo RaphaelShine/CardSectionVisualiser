@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 화면 왼쪽에 가사 목록을 띄우고, 지금 박의 가사를 강조한다
-// 누르기 판정은 InputManager가 TryGetLyricBeat로 묻는다. 씬에 EventSystem이 없으므로 UI 이벤트를 쓰지 않는다
+// 시작할 때 곡 선택 화면을 띄우고, 곡을 고르면 화면 왼쪽에 가사 목록을 띄워 지금 박의 가사를 강조한다
+// 누르기 판정은 InputManager가 TryGetSong, TryGetLyricBeat로 묻는다. 씬에 EventSystem이 없으므로 UI 이벤트를 쓰지 않는다
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private PromptManager promptManager;
@@ -17,6 +17,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Color currentColor = new Color(1f, 0.85f, 0.3f, 1f);
     // 스크롤이 목표 위치로 따라가는 속도
     [SerializeField] private float scrollSmoothing = 10f;
+    [Header("Song Selection")]
+    [SerializeField] private Color overlayColor = new Color(0f, 0f, 0f, 0.7f);
+    [SerializeField] private Color buttonColor = new Color(1f, 1f, 1f, 0.15f);
+    [SerializeField] private Vector2 buttonSize = new Vector2(560f, 110f);
+    [SerializeField] private float buttonSpacing = 36f;
+    [SerializeField] private int buttonFontSize = 44;
 
     private class LyricLine
     {
@@ -27,8 +33,13 @@ public class UIManager : MonoBehaviour
 
     // 가사가 있는 줄만. [ ]가 빈 줄은 넣지 않는다
     private readonly List<LyricLine> lines = new List<LyricLine>();
+    private Font font;
+    private RectTransform canvas;
     private RectTransform panel;
     private RectTransform content;
+    // 곡 선택 화면. 곡을 고르면 없앤다
+    private RectTransform songOverlay;
+    private readonly List<RectTransform> songButtons = new List<RectTransform>();
     private int currentIndex = -1;
     // content를 위로 올린 거리
     private float scroll;
@@ -36,11 +47,72 @@ public class UIManager : MonoBehaviour
 
     private float MaxScroll => Mathf.Max(0f, content.sizeDelta.y - panel.rect.height);
 
-    // PromptManager는 Awake에서 텍스트를 읽으므로 Start에서 만든다
-    private void Start()
+    // GameManager가 Start에서 곡 선택 화면을 띄우므로 Awake에서 만든다
+    private void Awake()
     {
+        // LegacyRuntime.ttf는 OS 폰트로 대체해 그리므로 한글도 보인다
+        font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        BuildCanvas();
         BuildPanel();
+        // 가사는 곡을 고른 뒤에 띄운다
+        panel.gameObject.SetActive(false);
+    }
+
+    // 곡 이름마다 버튼을 세로로 늘어놓는다
+    public void ShowSongSelection(IReadOnlyList<Song> songs)
+    {
+        HideSongSelection();
+
+        songOverlay = CreateRect("SongSelection", canvas, typeof(Image));
+        songOverlay.anchorMin = Vector2.zero;
+        songOverlay.anchorMax = Vector2.one;
+        songOverlay.sizeDelta = Vector2.zero;
+        Image background = songOverlay.GetComponent<Image>();
+        background.color = overlayColor;
+        background.raycastTarget = false;
+
+        float height = songs.Count * buttonSize.y + (songs.Count - 1) * buttonSpacing;
+        CreateLabel("Title", songOverlay, "곡을 선택하세요", buttonFontSize, new Vector2(0f, height / 2f + buttonSize.y));
+
+        for (int i = 0; i < songs.Count; i++)
+        {
+            RectTransform button = CreateRect($"Song_{songs[i].name}", songOverlay, typeof(Image));
+            button.sizeDelta = buttonSize;
+            button.anchoredPosition = new Vector2(0f, height / 2f - buttonSize.y / 2f - i * (buttonSize.y + buttonSpacing));
+            Image image = button.GetComponent<Image>();
+            image.color = buttonColor;
+            image.raycastTarget = false;
+
+            CreateLabel("Name", button, songs[i].name, buttonFontSize, Vector2.zero);
+            songButtons.Add(button);
+        }
+    }
+
+    public void HideSongSelection()
+    {
+        if (songOverlay != null)
+            Destroy(songOverlay.gameObject);
+        songOverlay = null;
+        songButtons.Clear();
+    }
+
+    // screenPosition에 있는 곡 버튼의 순서. 버튼 위가 아니면 false
+    public bool TryGetSong(Vector2 screenPosition, out int index)
+    {
+        for (index = 0; index < songButtons.Count; index++)
+        {
+            if (RectTransformUtility.RectangleContainsScreenPoint(songButtons[index], screenPosition, null))
+                return true;
+        }
+        index = -1;
+        return false;
+    }
+
+    // 곡을 고른 뒤 PromptManager가 텍스트를 읽고 나면 부른다
+    public void ShowLyrics()
+    {
         BuildLines();
+        panel.gameObject.SetActive(true);
     }
 
     private void Update()
@@ -71,7 +143,7 @@ public class UIManager : MonoBehaviour
     }
 
     public bool IsOverLyrics(Vector2 screenPosition) =>
-        panel != null && RectTransformUtility.RectangleContainsScreenPoint(panel, screenPosition, null);
+        panel != null && panel.gameObject.activeInHierarchy && RectTransformUtility.RectangleContainsScreenPoint(panel, screenPosition, null);
 
     // screenPosition에 있는 가사의 박. 가사 위가 아니면 false
     public bool TryGetLyricBeat(Vector2 screenPosition, out int beat)
@@ -94,7 +166,7 @@ public class UIManager : MonoBehaviour
     // amount는 줄 수. 양수면 아래 가사로 내려간다
     public void Scroll(float amount) => targetScroll += amount * lineHeight;
 
-    private void BuildPanel()
+    private void BuildCanvas()
     {
         GameObject canvasObject = new GameObject("LyricCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
         canvasObject.transform.SetParent(transform, false);
@@ -103,10 +175,14 @@ public class UIManager : MonoBehaviour
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         scaler.referenceResolution = new Vector2(1920f, 1080f);
         scaler.matchWidthOrHeight = 1f;
+        canvas = canvasObject.GetComponent<RectTransform>();
+    }
 
+    private void BuildPanel()
+    {
         // 왼쪽 가장자리에 붙은 세로 띠. 넘치는 가사는 RectMask2D로 가린다
         panel = new GameObject("LyricPanel", typeof(RectTransform), typeof(Image), typeof(RectMask2D)).GetComponent<RectTransform>();
-        panel.SetParent(canvasObject.transform, false);
+        panel.SetParent(canvas, false);
         panel.anchorMin = new Vector2(0f, 0f);
         panel.anchorMax = new Vector2(0f, 1f);
         panel.pivot = new Vector2(0f, 0.5f);
@@ -125,9 +201,6 @@ public class UIManager : MonoBehaviour
 
     private void BuildLines()
     {
-        // LegacyRuntime.ttf는 OS 폰트로 대체해 그리므로 한글도 보인다
-        Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-
         foreach (Prompt prompt in promptManager.Prompts)
         {
             if (prompt == null || string.IsNullOrWhiteSpace(prompt.lyric)) continue;
@@ -156,6 +229,33 @@ public class UIManager : MonoBehaviour
         }
 
         content.sizeDelta = new Vector2(0f, lines.Count * lineHeight + padding * 2f);
+    }
+
+    // parent 가운데에 붙은 RectTransform
+    private static RectTransform CreateRect(string name, Transform parent, params System.Type[] components)
+    {
+        GameObject gameObject = new GameObject(name, typeof(RectTransform));
+        foreach (System.Type component in components)
+            gameObject.AddComponent(component);
+        RectTransform rect = gameObject.GetComponent<RectTransform>();
+        rect.SetParent(parent, false);
+        return rect;
+    }
+
+    private void CreateLabel(string name, Transform parent, string label, int size, Vector2 position)
+    {
+        RectTransform rect = CreateRect(name, parent, typeof(Text));
+        rect.sizeDelta = new Vector2(buttonSize.x, buttonSize.y);
+        rect.anchoredPosition = position;
+
+        Text text = rect.GetComponent<Text>();
+        text.font = font;
+        text.fontSize = size;
+        text.alignment = TextAnchor.MiddleCenter;
+        text.horizontalOverflow = HorizontalWrapMode.Overflow;
+        text.raycastTarget = false;
+        text.color = Color.white;
+        text.text = label;
     }
 
     private void SetHighlight(LyricLine line, bool current)

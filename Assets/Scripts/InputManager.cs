@@ -2,18 +2,25 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// 마우스·터치 입력을 읽는다. 가사를 누르면 그 가사의 박을 알린다
+// 마우스·터치 입력을 읽는다. 곡 버튼을 누르면 그 곡을, 가사를 누르면 그 가사의 박을 알린다
 public class InputManager : MonoBehaviour
 {
     [SerializeField] private UIManager uiManager;
 
+    // 누른 곡 버튼의 순서. GameManager가 받아 그 곡을 시작한다
+    public event Action<int> OnSongSelected;
     // 누른 가사의 박. GameManager가 받아 시점을 옮긴다
     public event Action<int> OnLyricSelected;
 
     private void Update()
     {
-        if (TryGetPress(out Vector2 position) && uiManager.TryGetLyricBeat(position, out int beat))
-            OnLyricSelected?.Invoke(beat);
+        if (TryGetPress(out Vector2 position))
+        {
+            if (uiManager.TryGetSong(position, out int song))
+                OnSongSelected?.Invoke(song);
+            else if (uiManager.TryGetLyricBeat(position, out int beat))
+                OnLyricSelected?.Invoke(beat);
+        }
 
         // 가사 위에서 휠을 굴리면 가사 목록을 넘긴다
         Mouse mouse = Mouse.current;

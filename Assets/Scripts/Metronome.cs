@@ -27,9 +27,10 @@ public class Metronome : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] private float bpm = 65f/4;
+    // 곡을 고르면 SetSong이 채운다
+    private float bpm = 60f;
     // 노래 시작부터 첫 박(0번 박)까지의 시간(초)
-    [SerializeField] private float firstBeatOffset = 14.88f;
+    private float firstBeatOffset;
 
     private AudioSource audioSource;
     private int lastBeat = -1;
@@ -55,6 +56,19 @@ public class Metronome : MonoBehaviour
 
     // 박 수 -> 실제 경과 시간(초). Command의 박 단위 대기에 쓴다
     public static float Beat2Second(float beat) => beat * Instance.SecondsPerBeat / Instance.Speed;
+
+    public void SetSong(Song song)
+    {
+        Stop();
+        audioSource.clip = song.music;
+        bpm = song.bpm;
+        firstBeatOffset = song.firstBeatOffset;
+
+        if (song.music == null)
+            Debug.LogError($"[Metronome] Song '{song.name}' has no music.");
+        if (bpm <= 0f)
+            Debug.LogError($"[Metronome] Song '{song.name}' has invalid bpm {bpm}.");
+    }
 
     public void Play()
     {

@@ -205,13 +205,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.35, y: 1.03, z: 2.92}
+  m_LocalRotation: {x: -0, y: 0.9990325, z: -0.043978445, w: 0}
+  m_LocalPosition: {x: 0.56, y: 1.08, z: 2.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 5.041, y: 180, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -518,7 +518,7 @@ MonoBehaviour:
   childAnimator: {fileID: 9100000, guid: 6a5108653d4854b89b2b9530522666b4, type: 2}
   rowPoses: 000000000100000002000000i
   audienceRightStep: {x: -0.42, y: 0, z: 0}
-  rowStep: {x: 0, y: 0, z: 0.6}
+  rowStep: {x: 0, y: 0, z: 0.2}
   rowCardGap: 0.02
 --- !u!4 &928744294
 Transform:
@@ -564,7 +564,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a198a83c721043298f6f20d5321d986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PromptManager
-  promptFile: {fileID: 4900000, guid: e875608fc2f894fdf90ad65efb1412d9, type: 3}
   beatsPerLine: 1
 --- !u!4 &947120616
 Transform:
@@ -611,8 +610,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17e22680b2ad94386993bb51c05f18cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Metronome
-  bpm: 32.2
-  firstBeatOffset: 19
 --- !u!82 &1003597828
 AudioSource:
   m_ObjectHideFlags: 0
@@ -624,8 +621,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: cb81cf51e2e374df0a8427d9d6b90f48, type: 3}
-  m_PlayOnAwake: 1
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -763,6 +760,11 @@ MonoBehaviour:
   normalColor: {r: 1, g: 1, b: 1, a: 0.55}
   currentColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   scrollSmoothing: 10
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.7}
+  buttonColor: {r: 1, g: 1, b: 1, a: 0.15}
+  buttonSize: {x: 560, y: 110}
+  buttonSpacing: 36
+  buttonFontSize: 44
 --- !u!4 &1164916554
 Transform:
   m_ObjectHideFlags: 0
@@ -814,6 +816,17 @@ MonoBehaviour:
   commandManager: {fileID: 1949494535}
   inputManager: {fileID: 1914688303}
   uiManager: {fileID: 1164916553}
+  songs:
+  - name: LookOutTheWindow
+    prompt: {fileID: 4900000, guid: e875608fc2f894fdf90ad65efb1412d9, type: 3}
+    music: {fileID: 8300000, guid: cb81cf51e2e374df0a8427d9d6b90f48, type: 3}
+    bpm: 32.2
+    firstBeatOffset: 19
+  - name: NewMiracle
+    prompt: {fileID: 4900000, guid: 6ebaff2b6252d4721ab578042c51a8fa, type: 3}
+    music: {fileID: 8300000, guid: 76f4a3a46eb2744d4a85d4526ec0158c, type: 3}
+    bpm: 24
+    firstBeatOffset: 10
 --- !u!4 &1483219109
 Transform:
   m_ObjectHideFlags: 0

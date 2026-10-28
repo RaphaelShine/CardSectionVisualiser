@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class PromptManager : MonoBehaviour
 {
-    // 한 줄마다 (cardNum) [가사] {Command}
-    [SerializeField] private TextAsset promptFile;
     // 한 줄이 차지하는 박 수. 1이면 n번째 줄이 n번째 박에 실행된다
     [SerializeField, Min(1)] private int beatsPerLine = 1;
 
@@ -21,11 +19,7 @@ public class PromptManager : MonoBehaviour
 
     public IReadOnlyList<Prompt> Prompts => prompts;
 
-    private void Awake()
-    {
-        Load(promptFile);
-    }
-
+    // 한 줄마다 (cardNum) [가사] {Command}. GameManager가 고른 곡의 텍스트를 넘긴다
     public void Load(TextAsset file)
     {
         prompts.Clear();
@@ -94,6 +88,18 @@ public class PromptManager : MonoBehaviour
         return Enum.TryParse(name, out value) && Enum.IsDefined(typeof(T), value);
     }
 
+    // ( )에 한 번이라도 나온 장면들
+    public HashSet<int> GetUsedCardNums()
+    {
+        HashSet<int> cardNums = new HashSet<int>();
+        foreach (Prompt prompt in prompts)
+        {
+            if (prompt != null)
+                cardNums.UnionWith(prompt.cardNums);
+        }
+        return cardNums;
+    }
+
     // 박에 해당하는 Prompt. 해당 박에 시작하는 줄이 없으면 null
     public Prompt GetPrompt(int beat)
     {
@@ -137,10 +143,26 @@ public class PromptManager : MonoBehaviour
                 return new Command(prompt.cardNums[0], 2, 0);
             case CommandType.셋쨋줄:
                 return new Command(prompt.cardNums[0], 3, 0);;
-            case CommandType.위에서아래로쫘르륵:
-                return new ChainCommand(prompt.cardNums[0], 0, 0, 1);
-            case CommandType.위에서아래로천천히쫘르륵:
-                return new ChainCommand(prompt.cardNums[0], 0, 0, 2);
+            case CommandType.위에서밑으로쫘르륵:
+                return new ChainCommand(prompt.cardNums[0], 0, 0, 1, false);
+            case CommandType.위에서밑으로천천히쫘르륵:
+                return new ChainCommand(prompt.cardNums[0], 0, 0, 2, false);
+            case CommandType.밑에서위로쫘르륵:
+                return new ChainCommand(prompt.cardNums[0], 0, 0, 1, true);
+            case CommandType.밑에서위로천천히쫘르륵:
+                return new ChainCommand(prompt.cardNums[0], 0, 0, 2, true);
+            case CommandType.카드박수:
+                return new ClapCommand(prompt.cardNums[0], 0, 0);
+            case CommandType.꺾기:
+                return new BendCommand(prompt.cardNums[0], 0, 0);
+            case CommandType.셋쨋줄가사:
+                return new LyricCommand(prompt.cardNums[0],prompt.cardNums[1],2,0,0,1);
+            case CommandType.둘쨋줄가사:
+                return new LyricCommand(prompt.cardNums[0],prompt.cardNums[1],1,0,0,1);
+            case CommandType.두박에:
+                return new OffbeatCommand(prompt.cardNums[0], 0, 0, 0.25f);
+            case CommandType.카드전체쫘라락넘기기:
+                return new FlipCommand(prompt.cardNums[0],0,0,2);
 
             default:
                 Debug.LogWarning($"[PromptManager] Line {prompt.lineNumber}: {{{commandType}}} is not connected to a Command yet. Falling back to a plain Command.");

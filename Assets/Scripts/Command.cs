@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class Command
@@ -24,6 +25,11 @@ public class Command
     {
         foreach (var child in children)
             child.OpenCard(cardNum);
+    }
+    protected IEnumerator RestAWhile(float restInterval, ChildBehavior child)
+    {
+        yield return new WaitForSeconds(Metronome.Beat2Second(restInterval));
+        child.OpenCard(cardNum);
     }
 }
 public class BlinkCommand : Command
@@ -58,6 +64,44 @@ public class BlinkCommand : Command
         }
     }
 }
+public class LyricCommand : Command
+{
+    private int lyricRow;
+    private int lyricScene;
+    private float restInterval; // 단위는 한 박
+    public LyricCommand(int s, int lS, int lR, int r, int c, float rest) : base(s,r,c)
+    {
+        lyricRow = lR;
+        lyricScene = lS;
+        restInterval = rest;
+    }
+    public override void OpenCard(CommandManager manager, ChildBehavior[] children)
+    {
+        for (int r=0; r<3; r++)
+        {
+            if (lyricRow == r)
+            {
+                for (int c=0; c<4; c++)
+                {
+                    float restFor = restInterval / 4 * c;
+                    manager.StartCoroutine(RestAWhile(lyricScene, restFor, children[r*4+c]));
+                }
+            }
+            else
+            {
+                for (int c=0; c<4; c++)
+                {
+                    children[r*4+c].OpenCard(cardNum);
+                }
+            }
+        }
+    }
+    private IEnumerator RestAWhile(int cardNum, float restInterval, ChildBehavior child)
+    {
+        yield return new WaitForSeconds(Metronome.Beat2Second(restInterval));
+        child.OpenCard(cardNum);
+    }
+}
 public class OffbeatCommand : Command
 {
     private float restInterval; // 단위는 한 박
@@ -67,27 +111,23 @@ public class OffbeatCommand : Command
     }
     public override void OpenCard(CommandManager manager, ChildBehavior[] children)
     {
-        for (int i=0; i<children.Length; i++)
-        {
-            float restFor = restInterval / children.Length * i;
-            manager.StartCoroutine(RestAWhile(restFor,children[i]));
-        }
-    }
-    private IEnumerator RestAWhile(float restInterval, ChildBehavior child)
-    {
-        yield return new WaitForSeconds(Metronome.Beat2Second(restInterval));
-        child.OpenCard(cardNum);
+        foreach (var child in children)
+            manager.StartCoroutine(RestAWhile(restInterval,child));
     }
 }
 public class ChainCommand : Command
 {
     private float restInterval; // 단위는 한 박
-    public ChainCommand(int s, int r, int c, float rest) : base(s,r,c)
+    private bool isReverse;
+    public ChainCommand(int s, int r, int c, float rest, bool reverse) : base(s,r,c)
     {
         restInterval = rest;
+        isReverse = reverse;
     }
     public override void OpenCard(CommandManager manager, ChildBehavior[] children)
     {
+        if (isReverse)
+            children.Reverse();
         for (int r=0; r<3; r++)
         {
             float restFor = restInterval / 3 * r;
@@ -97,9 +137,54 @@ public class ChainCommand : Command
             }
         }
     }
-    private IEnumerator RestAWhile(float restInterval, ChildBehavior child)
+}
+public class FlipCommand : Command
+{
+    private float restInterval; // 단위는 한 박
+    public FlipCommand(int s, int r, int c, float rest) : base(s,r,c)
     {
-        yield return new WaitForSeconds(Metronome.Beat2Second(restInterval));
-        child.OpenCard(cardNum);
+        restInterval = rest;
     }
+    public override void OpenCard(CommandManager manager, ChildBehavior[] children)
+    {
+        foreach (var child in children)
+            manager.StartCoroutine(Flip(restInterval,child,restInterval));
+    }
+    private IEnumerator Flip(float restInterval, ChildBehavior child, float rest)
+    {
+        float restFor = restInterval / cardNum;
+        for (int i=0; i<cardNum; i++)
+        {
+            yield return new WaitForSeconds(Metronome.Beat2Second(restFor));
+            child.OpenCard(i);
+        }
+    }
+}
+// {카드박수}. 카드를 바꾸고, 자세는 그대로 둔 채 상체로 박수를 한 번 친다
+public class ClapCommand : Command
+{
+    public ClapCommand(int s, int r, int c) : base(s,r,c) {}
+    public override void OpenCard(CommandManager manager, ChildBehavior[] children)
+    {
+        foreach (var child in children)
+        {
+            child.OpenCard(cardNum);
+            child.Clap();
+        }
+    }
+    // 시점 이동으로 지나간 박수는 다시 치지 않는다. 카드만 바꾸는 Command.Finish를 그대로 쓴다
+}
+// {꺾기}. 카드를 바꾸고, 자세는 그대로 둔 채 상체를 한 번 꺾었다 편다
+public class BendCommand : Command
+{
+    public BendCommand(int s, int r, int c) : base(s,r,c) {}
+    public override void OpenCard(CommandManager manager, ChildBehavior[] children)
+    {
+        foreach (var child in children)
+        {
+            child.OpenCard(cardNum);
+            child.Bend();
+        }
+    }
+    // 시점 이동으로 지나간 꺾기는 다시 하지 않는다. 카드만 바꾸는 Command.Finish를 그대로 쓴다
 }

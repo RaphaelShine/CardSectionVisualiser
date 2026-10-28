@@ -16,13 +16,7 @@ MonoBehaviour:
   m_GUID: 14c8134f288f847e4995f372c7463be2
   m_SerializeEntries:
   - m_GUID: 0306e7e2c1cf34580b749b10c4f2270d
-    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u110C\u1165\u11B8\u1100\u1175.png"
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Scenes
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 037c4f6a914b84d958a37c772f0b9519
-    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1102\u116E\u11AB\u1107\u1161\u11C0 \u110B\u1171 \u1109\u1175\u11AB\u1102\u1161\u1102\u1173\u11AB \u1102\u116E\u11AB\u110A\u1161\u110B\u116E\u11B7\u1100\u116A \u1109\u1162\u110A\u1161\u11A8\u1103\u1173\u11AF.png"
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u110C\u1165\u11B8\u1100\u1175.png"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
@@ -34,7 +28,7 @@ MonoBehaviour:
     - Scenes
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 16cd82d53840040928503a0918e4b0e2
-    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1112\u1161\u1102\u1173\u11AF.png"
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1112\u1161\u1102\u1173\u11AF.png"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
@@ -51,14 +45,68 @@ MonoBehaviour:
     m_SerializedLabels:
     - Scenes
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3929292b088d7415a8fa37810928ea46
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u110B\u1168\u1109\u116E\u1102\u1175\u11B7.jpg"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 40aadda975f1e44f9912380026c643dd
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u110B\u116A\u11BC\u1100\u116A\u11AB.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 449a466c355ab4c308fae8980adf7819
     m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1102\u1169\u110B\u1173\u11AF\u1109\u1162\u110A\u1161\u11A8.jpg"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48f3ee757845a4714bf9423a176664e0
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1109\u116E\u11AF\u1110\u1169\u11BC.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5015aaeaf064d4e519a56f10a8c8d82d
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1106\u1161\u1105\u1175\u110B\u1161\u110B\u1168\u1109\u116E.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 569f811fc04354f02a2c3299e4b61da8
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u110C\u116E\u1102\u1175\u11B7\u1106\u1161\u11AF\u110A\u1173\u11B7.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5997ecb3242464aa98cf702ee72b7677
+    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1102\u116E\u11AB\u1109\u116E\u11C1.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6123defa0f68a4317bfad4bb44525e45
-    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1102\u116E\u11AB.png"
+    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u110E\u1161\u11BC\u1106\u116E\u11AB.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 69478d8fdb3cd44c6a54b2210b27c041
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u110B\u1161\u110C\u1175\u11A8.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 724b6c41a8a0a41a598483213ae6df77
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1100\u1169\u1106\u1175\u11AB.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7617578b294bd49549b50c2ff56b82a6
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1100\u1175\u1103\u1169\u1109\u1169\u11AB.png"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
@@ -69,7 +117,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8f4712d5478e5416083113de1dd08965
-    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1101\u1169\u11BE\u1107\u1169\u11BC\u110B\u1169\u1105\u1175.png"
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1101\u1169\u11BE\u1107\u1169\u11BC\u110B\u1169\u1105\u1175.png"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
@@ -86,14 +134,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - Scenes
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9c31e7dbba94b46bea7578f5255dc413
-    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u110C\u116E\u1102\u1175\u11B7\u1106\u1161\u11AF\u110A\u1173\u11B7.png"
+  - m_GUID: a01c6f5591b1143ad90767b781379141
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1109\u1175\u11AB\u1105\u1161\u11BC\u1109\u1175\u11AB\u1107\u116E.png"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a2c019322b5f540bcb1e87133b433c54
-    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1106\u116E\u110C\u1175\u1100\u1162.png"
+  - m_GUID: a139cdead8f9a4e599537ddf633f2a2f
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1100\u1173\u1105\u1165\u1102\u1161.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a305b328bf9a74fab86d5b8a45620cff
+    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1110\u1173\u1105\u1175.png"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
@@ -104,20 +158,50 @@ MonoBehaviour:
     m_SerializedLabels:
     - Scenes
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: dc61e2d819a154bffade4349b6530bc8
-    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1109\u1162\u110A\u1161\u11A8.png"
+  - m_GUID: b35c026d759ad4259a46f99a4ce0e7b2
+    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1102\u116E\u11AB\u110E\u1161\u11BC\u1106\u116E\u11AB.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c0e71445aa1fd40f5a0fdd3ee47f919a
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1111\u1161\u11AB\u1103\u1161\u11AB.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c3cfa94d98b0a40b29d1fb8752009260
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1106\u1161\u110C\u1175\u1106\u1161\u11A8\u110C\u1161\u11BC.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d11475c4c6185472783d6c3ea9ef8aea
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1111\u1169\u1103\u1169\u110C\u116E.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e47d8efccf33c4d20986c4086f7b6514
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1112\u1161\u1110\u1173.jpg"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f990ea43e819a4b49a7bdc23fb4c3a76
-    m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1101\u1169\u11BE\u110B\u1167\u1105\u1165\u1100\u1162.jpg"
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u1101\u1169\u11BE\u110B\u1167\u1105\u1165\u1100\u1162.jpg"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fd94c72bfcc2643269716e6b74ffe5b0
     m_Address: "Assets/Masses/Cards/LookOutTheWindow/\u1102\u1169\u110B\u1173\u11AF\u110B\u1165\u11AF\u1100\u116E\u11AF.jpg"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Scenes
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fe533cf966e5e4b39b60fd5b2287169b
+    m_Address: "Assets/Masses/Cards/NewMiracle/\u110B\u1162\u1103\u1173\u11AF\u110B\u1165\u11AF\u1100\u116E\u11AF.jpg"
     m_ReadOnly: 0
     m_SerializedLabels:
     - Scenes
